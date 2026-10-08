@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ForgeGuard AI — Manufacturing Intelligence Platform</title>
+<style>:root{--bg:#0b0d10;--pn:#14181d;--pn2:#1a2027;--bd:#2a323c;--tx:#e6ebf0;--mu:#8b97a5;--cy:#22d3ee;--gr:#22c55e;--am:#f59e0b;--rd:#ef4444;font-family:Inter,system-ui,Segoe UI,Arial,sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5}
+.top{position:sticky;top:0;z-index:9;display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:10px 24px;background:#0b0d10ee;border-bottom:1px solid var(--bd);backdrop-filter:blur(8px)}
+.brand b{letter-spacing:.18em;color:var(--cy)}.brand small{display:block;font-size:9px;letter-spacing:.2em;color:var(--mu)}
+nav{display:flex;gap:16px;flex:1;flex-wrap:wrap}nav a{color:var(--mu);text-decoration:none;font-size:12px;letter-spacing:.06em;text-transform:uppercase}nav a:hover{color:var(--cy)}
+.stat{display:flex;gap:12px;align-items:center;font-size:11px;letter-spacing:.1em}.chip{border:1px solid var(--bd);padding:2px 8px;border-radius:3px}
+.ok{color:var(--gr)}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gr);margin-right:6px;animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:32px;align-items:center;padding:48px 24px;max-width:1280px;margin:auto}
+h1{font-size:clamp(28px,5vw,46px);margin:0 0 8px;font-weight:700}.sub{font-size:18px;color:var(--cy);margin:0 0 12px}.mut{color:var(--mu)}.s{font-size:12px}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:18px 0;color:var(--mu)}.flow span{border:1px solid var(--cy);color:var(--cy);padding:3px 10px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;border-radius:3px}.flow.dim span{border-color:var(--bd);color:var(--mu)}
+.mode{display:flex;flex-wrap:wrap;gap:14px;font-size:11px;padding:10px;border:1px dashed var(--am);border-radius:4px}.mode b{color:var(--am);letter-spacing:.1em}.g{color:var(--gr);font-style:normal}.a{color:var(--am);font-style:normal}
+.line{width:100%;background:var(--pn);border:1px solid var(--bd);border-radius:6px}.line .m{fill:#2a323c}.line .p{fill:#232b34;stroke:#3b4654}.line .c{stroke:var(--cy);fill:none;stroke-width:2}.line .beam{stroke:var(--cy);opacity:.35;fill:none;stroke-dasharray:3 3}.line .sc{fill:none;stroke:var(--cy);stroke-width:1;animation:pulse 2s infinite}
+.belt circle{animation:pulse 3s infinite}
+main{max-width:1280px;margin:auto;padding:0 24px 40px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.panel{background:linear-gradient(180deg,var(--pn2),var(--pn));border:1px solid var(--bd);border-radius:6px;padding:18px;box-shadow:0 6px 20px #0006;min-width:0}.wide{grid-column:1/-1}
+h2{margin:0 0 14px;font-size:13px;letter-spacing:.14em;color:var(--cy)}h2 small{color:var(--mu);letter-spacing:.04em;font-weight:400;margin-left:10px;font-size:11px}h3{font-size:13px;margin:0 0 6px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.vid{position:relative;aspect-ratio:16/10;background:#050607;border:1px solid var(--bd);border-radius:4px;overflow:hidden}.vid video,.vid canvas{width:100%;height:100%;object-fit:cover;display:block}
+.idle{position:absolute;inset:0;display:grid;place-items:center;color:var(--mu);font-size:12px;letter-spacing:.1em}
+.tag{position:absolute;top:8px;left:8px;background:#000a;color:var(--rd);padding:2px 8px;font-size:11px;border-radius:3px;animation:pulse 1.4s infinite}
+.scanline{position:absolute;left:0;right:0;height:2px;background:var(--cy);box-shadow:0 0 12px var(--cy);animation:scan 2.4s linear infinite}@keyframes scan{from{top:0}to{top:100%}}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+button,select{background:var(--pn2);color:var(--tx);border:1px solid var(--bd);padding:8px 12px;font-size:11px;letter-spacing:.08em;border-radius:3px;cursor:pointer;font-family:inherit}button:hover:not(:disabled){border-color:var(--cy)}button:disabled{opacity:.4;cursor:not-allowed}button.pri{background:#0e3a46;border-color:var(--cy);color:var(--cy)}
+.meta{display:flex;flex-wrap:wrap;gap:14px;font-size:11px;color:var(--mu)}.meta b{color:var(--tx)}
+.err{border:1px solid var(--rd);background:#2a1214;padding:10px;border-radius:4px;font-size:12px;margin-top:8px}
+.steps{list-style:none;padding:0;margin:0 0 12px}.steps li{padding:6px 10px;border-left:2px solid var(--bd);color:var(--mu);font-size:12px}.steps li.run{border-color:var(--cy);color:var(--cy)}.steps li.done{border-color:var(--gr);color:var(--tx)}.steps li.done:after{content:" ✓";color:var(--gr)}
+.result{border:1px solid var(--bd);padding:14px;border-radius:4px;animation:fade .5s}.result .v{font-size:26px;font-weight:700}.result dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:8px 0 0}.result dt{color:var(--mu)}.result dd{margin:0}
+.fail{color:var(--rd)}.pass{color:var(--gr)}.warn{color:var(--am)}.cy{color:var(--cy)}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}}
+.tl{list-style:none;margin:0;padding:0 0 0 14px;border-left:2px solid var(--bd)}.tl li{position:relative;padding:0 0 16px 16px;animation:fade .5s both}.tl li:before{content:"";position:absolute;left:-22px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--cy)}.tl b{font-size:11px;letter-spacing:.12em;color:var(--cy);display:block}
+.note{margin:12px 0 0;padding:10px;border:1px solid var(--am);color:var(--am);border-radius:4px;font-size:12px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:12px}.card{background:var(--bg);border:1px solid var(--bd);border-radius:4px;padding:10px}.card small{color:var(--mu);font-size:10px;letter-spacing:.12em}.card b{display:block;font-size:20px}.card span{font-size:11px}
+canvas#trend{width:100%;height:auto;background:var(--bg);border:1px solid var(--bd);border-radius:4px}.am{color:var(--am)}
+.gwrap{display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:center}.gauge{width:150px}.gb{fill:none;stroke:var(--bd);stroke-width:9}.ga{fill:none;stroke:var(--gr);stroke-width:9;stroke-linecap:round;transform:rotate(-90deg);transform-origin:center;transition:all 1s}.gauge text{fill:var(--tx);font-size:26px;font-weight:700}.gauge .gl{font-size:8px;fill:var(--mu);letter-spacing:.1em;font-weight:400}
+.bars>div{display:grid;grid-template-columns:150px 1fr 44px;gap:8px;align-items:center;margin:6px 0;font-size:12px}.bars i{display:block;height:8px;background:var(--bd);border-radius:4px;overflow:hidden}.bars i u{display:block;height:100%;background:var(--cy);transition:width 1s}
+.alert{padding:10px 14px;border:1px solid var(--rd);background:#2a1214;color:#fecaca;border-radius:4px;font-size:12px}.alert.ack{border-color:var(--am);background:#2a2010;color:#fde68a}
+.acts{color:var(--mu);padding-left:20px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}.scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap}th{text-align:left;color:var(--mu);font-weight:500;letter-spacing:.08em;font-size:10px;text-transform:uppercase}th,td{padding:8px 10px;border-bottom:1px solid var(--bd)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.arch{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.arch div{background:var(--bg);border:1px solid var(--bd);border-top:2px solid var(--cy);padding:10px;border-radius:4px;font-size:12px;position:relative}.arch div small{display:block;color:var(--mu);font-size:10px}.arch div b{color:var(--cy);font-size:10px;letter-spacing:.1em}
+.road{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.road div{border-top:2px solid var(--cy);padding-top:8px;font-size:12px}.road b{color:var(--cy);font-size:10px;letter-spacing:.12em;display:block}
+.diff{border-color:var(--cy)}.q{font-size:18px;margin:4px 0}
+footer{text-align:center;padding:30px 24px;border-top:1px solid var(--bd);color:var(--mu)}footer b{display:block;color:var(--cy);letter-spacing:.2em}footer small{display:block;margin-top:6px;font-size:10px}
+@media(max-width:820px){.hero,main,.cols{grid-template-columns:1fr}.gwrap{grid-template-columns:1fr;justify-items:center}.bars>div{grid-template-columns:100px 1fr 40px}}
+
+[hidden]{display:none!important}
+body{background:radial-gradient(circle at 20% -10%,#12202b 0,transparent 40%),linear-gradient(#ffffff05 1px,transparent 1px) 0 0/100% 32px,var(--bg)}
+.panel{border-top:2px solid #22d3ee55}
+h2{padding-bottom:10px;border-bottom:1px solid var(--bd)}
+button{text-transform:uppercase;font-weight:600}
+th{background:#0e1216}tbody tr:hover{background:#ffffff08}
+.top{box-shadow:0 2px 12px #0008}
+
+nav a{white-space:nowrap}
+@media(max-width:820px){
+.top{padding:8px 12px;gap:6px 12px;position:static}
+.brand b{font-size:15px}
+nav{order:3;flex:none;width:100%;flex-wrap:nowrap;overflow-x:auto;gap:18px;padding:6px 0 2px;border-top:1px solid var(--bd)}
+.stat{margin-left:auto}
+.hero{padding:22px 14px;gap:20px}.sub{font-size:15px}
+main{padding:0 12px 28px;gap:14px}.panel{padding:14px}
+.btns button{flex:1 1 46%}
+h2 small{display:block;margin:4px 0 0}
+.bars>div{grid-template-columns:96px 1fr 38px}
+}
+
+.err{border-color:var(--am);background:#2a2010}
+</style></head>
+<body>
+<header class="top"><div class="brand"><b>FORGEGUARD AI</b><small>MANUFACTURING INTELLIGENCE PLATFORM</small></div>
+<nav><a href="#live">Live Inspection</a><a href="#detective">Detective Agent</a><a href="#sensors">Sensor Network</a><a href="#history">Quality History</a><a href="#analytics">Analytics</a></nav>
+<div class="stat"><span class="chip">LINE 03</span><span class="ok"><i class="dot"></i>SYSTEM ONLINE</span></div></header>
+
+<section class="hero"><div><h1>AI-Powered Quality Inspection</h1><p class="sub">Detect defects. Investigate patterns. Prevent quality failures.</p>
+<p class="mut">ForgeGuard AI combines computer vision, machine signals, inspection history, and intelligent analysis to identify quality risks before they become production losses.</p>
+<div class="flow"><span>DETECT</span>→<span>CLASSIFY</span>→<span>ANALYZE</span>→<span>PREDICT</span>→<span>PREVENT</span></div>
+<div class="mode"><b>PROTOTYPE / DEMO MODE</b><span>Camera: <em class="g">LIVE</em></span><span>AI Detection: <em class="a" id="ai-mode">RULE-BASED IMAGE ANALYSIS</em></span><span>Sensor Data: <em class="a">SIMULATED</em></span></div></div>
+<svg viewBox="0 0 400 200" class="line" aria-label="Production line with inspection camera"><rect x="10" y="150" width="380" height="14" rx="3" class="m"/><g class="belt"><circle cx="40" cy="170" r="8" class="m"/><circle cx="130" cy="170" r="8" class="m"/><circle cx="220" cy="170" r="8" class="m"/><circle cx="310" cy="170" r="8" class="m"/></g><rect x="160" y="112" width="80" height="38" rx="4" class="p"/><rect x="60" y="126" width="40" height="24" rx="3" class="p"/><rect x="300" y="126" width="40" height="24" rx="3" class="p"/><path d="M200 20v30" class="c"/><rect x="180" y="46" width="40" height="26" rx="4" class="p"/><circle cx="200" cy="59" r="7" class="c"/><path d="M200 72L160 112M200 72L240 112" class="beam"/><rect x="160" y="112" width="80" height="38" rx="4" class="sc"/></svg></section>
+
+<main>
+<section id="live" class="panel wide"><h2>LIVE CAMERA INSPECTION <small>CAMERA 01 — INSPECTION STATION</small></h2>
+<div class="cols"><div>
+<div class="vid"><video id="vid" autoplay playsinline muted></video><canvas id="cap" hidden></canvas><div id="scan" class="scanline" hidden></div><span id="live-tag" class="tag" hidden>● LIVE</span><div id="idle" class="idle">No image yet — take a photo, upload a product image, or start the live camera</div></div>
+<div class="btns"><button id="b-photo" class="pri">TAKE PHOTO</button><input type="file" id="photo" accept="image/*" capture="environment" hidden><button id="b-up" class="pri">UPLOAD PRODUCT IMAGE</button><input type="file" id="up" accept="image/*" hidden><button id="b-gold">SET GOLDEN SAMPLE</button><button id="b-run" class="pri" disabled>RUN AI INSPECTION</button></div><p class="mut s">How to scan: 1) photo of a GOOD product → SET GOLDEN SAMPLE. 2) photo of the product to check → RUN AI INSPECTION. Keep the product in the same position and lighting.</p><div class="btns"><button id="b-start">START LIVE CAMERA</button><button id="b-allow">ALLOW CAMERA</button><button id="b-cap" disabled>CAPTURE FRAME</button><button id="b-stop" disabled>STOP CAMERA</button></div>
+<div id="cam-err" class="err" hidden></div>
+<div class="meta"><span>Status: <b id="m-status">OFFLINE</b></span><span>Resolution: <b id="m-res">—</b></span><span>Station: <b>INS-03A</b></span><span>Frame: <b id="m-frame">0</b></span><span>Reference: <b id="m-ref">NOT SET</b></span></div></div>
+<div><ol id="steps" class="steps"></ol>
+<div id="result" class="result" hidden></div></div></div></section>
+
+<section id="detective" class="panel wide"><h2>AI DETECTIVE AGENT <small>Investigating why the quality signal changed</small></h2><ol id="tl" class="tl"><li class="mut">Run an AI inspection to start the investigation.</li></ol>
+<p class="note">Possible contributing factor — physical root cause requires operator / maintenance confirmation.</p></section>
+
+<section id="sensors" class="panel"><h2>MACHINE SENSOR NETWORK <small>Simulated data</small></h2><div id="cards" class="cards"></div><canvas id="trend" width="560" height="150"></canvas><p class="mut s">Trend: <span class="cy">■</span> vibration · <span class="am">■</span> temperature (normalised)</p></section>
+
+<section class="panel"><h2>QUALITY RISK INDEX</h2><div class="gwrap"><svg viewBox="0 0 120 120" class="gauge"><circle cx="60" cy="60" r="50" class="gb"/><circle id="garc" cx="60" cy="60" r="50" class="ga" stroke-dasharray="0 314"/><text id="gnum" x="60" y="64" text-anchor="middle">--</text><text id="glab" x="60" y="82" text-anchor="middle" class="gl">NO DATA</text></svg><div id="bars" class="bars"></div></div>
+<p class="mut s">The Quality Risk Index combines inspection results, process signals, and historical patterns to prioritize operator investigation. It is a demo score, not a scientifically validated production metric.</p></section>
+
+<section class="panel wide"><h2>OPERATOR ACTION CENTER</h2><div id="alert" class="alert">ALERT — Potential quality degradation detected on LINE 03.</div>
+<ol class="acts"><li>Inspect tool/spindle condition</li><li>Verify vibration level</li><li>Check current production batch</li><li>Re-inspect the next 10 components</li><li>Confirm physical root cause with maintenance/quality engineer</li></ol>
+<div class="btns"><button id="a-ack">ACKNOWLEDGE ALERT</button><button id="a-re">START RE-INSPECTION</button><button id="a-rep">CREATE QUALITY REPORT</button><button id="a-inv">MARK AS INVESTIGATING</button></div><p id="a-msg" class="mut s"></p></section>
+
+<section id="history" class="panel wide"><h2>INSPECTION HISTORY</h2><div class="filters"><select id="f-res"><option value="">Result: all</option><option>PASS</option><option>FAIL</option></select><select id="f-def"><option value="">Defect: all</option></select><select id="f-sev"><option value="">Severity: all</option><option>HIGH</option><option>MEDIUM</option><option>LOW</option></select><select id="f-time"><option value="">Time: all</option><option value="1">Last 1 min</option><option value="3">Last 3 min</option></select></div>
+<div class="scroll"><table><thead><tr><th>Time</th><th>Component</th><th>Result</th><th>Defect</th><th>Conf.</th><th>Severity</th><th>Risk</th><th>Status</th></tr></thead><tbody id="tbody"></tbody></table></div></section>
+
+<section id="analytics" class="panel wide"><h2>DEFECT ANALYTICS <small>Prototype values</small></h2><div id="kpis" class="kpis"></div><div id="dist" class="bars"></div></section>
+
+<section class="panel wide diff"><h2>FROM INSPECTION TO QUALITY INTELLIGENCE</h2><div class="cols"><div><p class="mut">Traditional inspection asks</p><p class="q">“Is this product defective?”</p><div class="flow dim"><span>Detect</span>→<span>Reject</span></div></div><div><p class="mut">ForgeGuard AI asks</p><p class="q cy">“What changed, what evidence supports the risk, and what should the operator investigate next?”</p><div class="flow"><span>Detect</span>→<span>Classify</span>→<span>Correlate</span>→<span>Assess Risk</span>→<span>Investigate</span>→<span>Prevent</span></div></div></div></section>
+
+<section class="panel wide"><h2>SYSTEM ARCHITECTURE</h2><div id="arch" class="arch"></div></section>
+
+<section class="panel wide"><h2>TECHNOLOGY STACK</h2><div class="cols"><div><h3>Prototype (this build)</h3><ul class="mut"><li>HTML · CSS · JavaScript</li><li>Real webcam via getUserMedia</li><li>Simulated defect model, sensors and history</li></ul></div><div><h3>Production integration (planned)</h3><ul class="mut"><li>Computer vision: Python, OpenCV, YOLO</li><li>AI/ML: detection, classification, anomaly detection, pattern analysis</li><li>Backend: FastAPI / Flask · Data: SQLite / PostgreSQL, time-series</li><li>Connectivity: PLC, IoT sensors, industrial cameras</li></ul></div></div></section>
+
+<section class="panel wide"><h2>FUTURE ROADMAP</h2><div id="road" class="road"></div></section>
+</main>
+<footer><b>FORGEGUARD AI</b><span>Intelligent Quality Inspection for Smart Manufacturing</span><small>Prototype for AI-powered industrial quality intelligence</small></footer>
+<script>const $=id=>document.getElementById(id), rnd=(a,b)=>a+Math.random()*(b-a), pick=a=>a[Math.floor(Math.random()*a.length)];
+const DEFECTS=[ // SIMULATED outcomes — not a trained model
+ {n:'Surface Crack',z:'Component edge — Zone B',sev:'HIGH'},{n:'Scratch',z:'Top face — Zone A',sev:'LOW'},
+ {n:'Dent',z:'Side wall — Zone C',sev:'MEDIUM'},{n:'Burr',z:'Machined edge — Zone D',sev:'MEDIUM'},
+ {n:'Corrosion',z:'Lower surface — Zone E',sev:'HIGH'},{n:'Casting Surface Defect',z:'Body — Zone A',sev:'MEDIUM'},
+ {n:'Weld Surface Defect',z:'Joint — Zone B',sev:'HIGH'},{n:'Missing Component',z:'Assembly — Zone F',sev:'HIGH'},
+ {n:'Misalignment',z:'Assembly — Zone C',sev:'MEDIUM'},{n:'Coating Defect',z:'Top face — Zone A',sev:'LOW'},{n:null,z:'—',sev:'LOW'}];
+const STEPS=['Capturing frame','Pre-processing image','Detecting object','Searching for anomalies','Classifying defect','Estimating severity','Checking process data','Generating quality risk'];
+let stream=null,frame=0,captured=false,busy=false,compN=10422,last=null,hist=[],sv={vib:6.8,tmp:78,rpm:1850,prs:6.2,cur:18.4},tv=[],tt=[];
+
+// ---------- Camera ----------
+function camErr(e){const box=$('cam-err');box.hidden=false;
+ const m=e&&e.name==='NotAllowedError'?'Camera access was blocked. If you opened this file inside a chat app or embedded preview, open it in Chrome or Edge instead. Otherwise allow the camera in the address bar and press START CAMERA again. On a phone you can also use TAKE PHOTO.':e&&e.name==='NotFoundError'?'No camera device was found on this machine.':'Camera could not be started.';
+ box.innerHTML=`<b>LIVE CAMERA NOT AVAILABLE HERE</b><br>${m}<br><b>You can still run the full demo with TAKE PHOTO or UPLOAD PRODUCT IMAGE.</b><br>Browsers only grant camera access on <b>localhost</b> or <b>HTTPS</b>. Open the app via http://localhost:8000 (python -m http.server 8000) or an HTTPS host.`;$('m-status').textContent='ERROR'}
+async function startCam(){$('cam-err').hidden=true;
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.isSecureContext)return camErr({name:'Insecure'});
+ $('m-status').textContent='REQUESTING…';
+ try{stream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});
+  const v=$('vid');v.srcObject=stream;v.hidden=false;$('cap').hidden=true;await v.play();
+  $('idle').hidden=true;$('live-tag').hidden=false;$('scan').hidden=false;$('m-status').textContent='LIVE';
+  const s=stream.getVideoTracks()[0].getSettings();$('m-res').textContent=s.width+'×'+s.height;
+  ['b-cap','b-stop'].forEach(i=>$(i).disabled=false);$('b-start').disabled=true;captured=false;$('b-run').disabled=true;
+ }catch(e){camErr(e)}}
+function stopCam(){if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;$('vid').srcObject=null;
+ $('idle').hidden=false;$('live-tag').hidden=true;$('scan').hidden=true;$('m-status').textContent='OFFLINE';$('m-res').textContent='—';
+ ['b-cap','b-stop','b-run'].forEach(i=>$(i).disabled=true);$('b-start').disabled=false}
+function capture(){const v=$('vid'),c=$('cap');if(!v.videoWidth)return;
+ c.width=v.videoWidth;c.height=v.videoHeight;c.getContext('2d').drawImage(v,0,0);c.hidden=false;v.hidden=true;$('scan').hidden=true;
+ captured=true;$('b-run').disabled=false;frame++;$('m-frame').textContent=frame}
+setInterval(()=>{if(stream&&!$('vid').hidden){frame++;$('m-frame').textContent=frame}},200);
+
+
+// ---------- Image analysis (rule-based, no trained model) ----------
+let golden=null;
+function prep(c){const t=document.createElement('canvas');t.width=t.height=96;const x=t.getContext('2d');x.drawImage(c,0,0,96,96);const d=x.getImageData(0,0,96,96).data,g=new Float32Array(9216);let sk=0;
+ for(let i=0;i<9216;i++){const r=d[i*4],q=d[i*4+1],b=d[i*4+2];g[i]=.299*r+.587*q+.114*b;if(r>95&&q>40&&b>20&&r>q&&r>b&&r-Math.min(q,b)>15&&Math.abs(r-q)>15)sk++}return{g,skin:sk/9216}}
+function norm(g){let m=0,s=0;for(const v of g)m+=v;m/=g.length;for(const v of g)s+=(v-m)**2;s=Math.sqrt(s/g.length)||1;return{n:g.map(v=>(v-m)/s),s}}
+function blocks(f){const o=[];for(let by=0;by<12;by++)for(let bx=0;bx<12;bx++){let a=0;for(let y=0;y<8;y++)for(let x=0;x<8;x++)a+=f((by*8+y)*96+bx*8+x,bx*8+x,by*8+y);o.push(a/64)}return o}
+function analyze(c){const P=prep(c),{n,s}=norm(P.g),ref=!!golden;
+ if(P.skin>.22)return{invalid:1,why:'Skin-tone content dominates the frame (likely a person). Place only the product in view.'};
+ if(s<6)return{invalid:1,why:'The image is almost uniform — no product or surface detail found.'};
+ let flag=[],score=0,method;
+ if(ref){const r=norm(golden.g).n,d=blocks(i=>Math.abs(n[i]-r[i]));d.forEach((v,i)=>v>.9&&flag.push(i));score=Math.max(...d);method='REFERENCE COMPARISON'}
+ else{const e=blocks((i,x,y)=>x<95&&y<95?Math.abs(P.g[i+1]-P.g[i])+Math.abs(P.g[i+96]-P.g[i]):0),mu=e.reduce((a,b)=>a+b)/144,sd=Math.sqrt(e.reduce((a,b)=>a+(b-mu)**2,0)/144)||1;
+  e.forEach((v,i)=>{const z=(v-mu)/sd;if(z>2.6&&v>8){flag.push(i);score=Math.max(score,z/2.2)}});method='NO-REFERENCE ANOMALY SCAN (lower reliability — set a golden sample)'}
+ const base={method};
+ if(!flag.length)return{...base,fail:0,conf:ref?Math.min(98,94+(.9-score)*4):86,d:DEFECTS[10]};
+ const cs=flag.map(i=>i%12),rs=flag.map(i=>i/12|0),x0=Math.min(...cs),x1=Math.max(...cs),y0=Math.min(...rs),y1=Math.max(...rs),w=x1-x0+1,h=y1-y0+1;let name;
+ if(ref&&flag.length>50)name='Misalignment';
+ else if(Math.max(w,h)/Math.min(w,h)>=2.5)name=score>1.6?'Surface Crack':'Scratch';
+ else if(flag.length>=6)name=ref?'Coating Defect':'Casting Surface Defect';else name=ref?'Dent':'Burr';
+ const sev=name==='Misalignment'||flag.length>=8||score>2?'HIGH':flag.length>=3?'MEDIUM':'LOW';
+ return{...base,fail:1,conf:Math.min(97,72+score*10+flag.length),d:{n:name,z:`Zone ${'ABCD'[(y0>5?2:0)+(x0>5?1:0)]}`,sev},box:{x:x0/12*c.width,y:y0/12*c.height,w:w/12*c.width,h:h/12*c.height}}}
+
+
+async function analyzeServer(c){try{const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.9));const fd=new FormData();fd.append('file',blob,'frame.jpg');
+ const res=await fetch('/inspect',{method:'POST',body:fd});if(!res.ok)return null;const j=await res.json(),t=j.detections[0],m='YOLOv8 MODEL (REAL) · '+j.ms+' ms';
+ if(!t)return{fail:0,conf:j.pass_conf,d:DEFECTS[10],method:m};
+ const [bx,by,bw,bh]=t.box;return{fail:1,conf:t.conf,d:{n:t.name.replace(/_/g,' '),z:'Zone '+'ABCD'[(by+bh/2>.5?2:0)+(bx+bw/2>.5?1:0)],sev:t.severity},box:{x:bx*c.width,y:by*c.height,w:bw*c.width,h:bh*c.height},method:m}}catch(e){return null}}
+fetch('/health').then(r=>r.json()).then(h=>{if(h.model_loaded){const e=$('ai-mode');e.textContent='YOLOV8 REAL MODEL';e.className='g'}}).catch(()=>{});
+
+// ---------- Inspection pipeline ----------
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+async function runInspection(){if(busy)return;if(!captured)capture();if(!captured)return;busy=true;$('b-run').disabled=true;
+ const ol=$('steps');ol.innerHTML=STEPS.map(s=>`<li>${s}</li>`).join('');$('result').hidden=true;
+ const c=$('cap'),ctx=c.getContext('2d'),snap=ctx.getImageData(0,0,c.width,c.height);
+ for(const li of ol.children){li.className='run';await wait(420);li.className='done'}
+ const A=(await analyzeServer(c))||analyze(c);
+ if(A.invalid){const r=$('result');r.hidden=false;r.innerHTML=`<small class="mut">INSPECTION RESULT · RULE-BASED IMAGE ANALYSIS</small><div class="v warn">NO PRODUCT DETECTED</div><p class="mut">${A.why}</p>`;busy=false;$('b-run').disabled=false;return}
+ const d=A.d,fail=!!A.fail,conf=A.conf;ctx.putImageData(snap,0,0);
+ if(fail){const {x,y,w,h}=A.box;ctx.lineWidth=Math.max(3,c.width/300);ctx.strokeStyle='#ef4444';ctx.strokeRect(x,y,w,h);ctx.fillStyle='#ef4444';ctx.font=`bold ${Math.max(14,c.width/45)}px sans-serif`;ctx.fillText(d.n.toUpperCase()+' '+conf.toFixed(1)+'%',x,Math.max(16,y-8))}
+ const sensorHot=sv.vib>6||sv.tmp>75;
+ const risk=fail?Math.round(Math.min(97,{HIGH:70,MEDIUM:52,LOW:38}[d.sev]+(sensorHot?12:0)+rnd(0,8))):Math.round(rnd(14,26));
+ last={d,fail,conf,risk,sensors:{...sv},method:A.method};
+ showResult();detective();gauge();alertBox();addHistory();busy=false;$('b-run').disabled=false}
+function showResult(){const {d,fail,conf}=last,r=$('result');r.hidden=false;
+ r.innerHTML=`<small class="mut">INSPECTION RESULT · ${last.method}</small><div class="v ${fail?'fail':'pass'}">${fail?'FAIL':'PASS'}</div>
+ <dl><dt>Defect</dt><dd>${(d.n||'No defect detected').toUpperCase()}</dd><dt>Confidence</dt><dd>${conf.toFixed(1)}%</dd><dt>Severity</dt><dd>${fail?d.sev:'NONE'}</dd><dt>Location</dt><dd>${d.z}</dd></dl>`}
+
+// ---------- Detective agent ----------
+const lvl=r=>r>=75?['HIGH RISK','fail']:r>=45?['MODERATE RISK','warn']:['LOW RISK','pass'];
+function detective(){const {d,fail,conf,risk,sensors:s}=last,hot=s.vib>6||s.tmp>75;const [rl,rc]=lvl(risk);
+ const items=[
+ ['STEP 01 — CAMERA EVIDENCE',fail?`Detected: ${d.n} · Confidence ${conf.toFixed(1)}% · ${d.z}`:`No visual anomaly found · Confidence ${conf.toFixed(1)}%`],
+ ['STEP 02 — SENSOR EVIDENCE',`Vibration ${s.vib.toFixed(1)} mm/s ${s.vib>6?'<span class=warn>ABOVE NORMAL</span>':'normal'} · Temperature ${s.tmp.toFixed(0)}°C ${s.tmp>75?'<span class=warn>ELEVATED</span>':'normal'} · Speed ${Math.round(s.rpm)} RPM · Pressure ${s.prs.toFixed(1)} bar`],
+ ['STEP 03 — PATTERN ANALYSIS','Comparing current inspection with previous inspections, sensor trends, machine conditions and batch information (simulated history).'],
+ ['STEP 04 — DETECTED PATTERN',fail&&hot?`Elevated vibration/temperature coincides with a rise in surface-type defect detections (${hist.filter(h=>h.res==='FAIL').length+1} fails in recent window).`:fail?'Defect detected without a matching process-signal anomaly — isolated event suspected.':'Process signals and visual evidence are consistent. No adverse pattern.'],
+ ['STEP 05 — QUALITY RISK',`<span class="${rc}">${rl} · ${risk}/100</span>`],
+ ['STEP 06 — RECOMMENDED INVESTIGATION',fail?(hot?'Inspect spindle/tool condition and verify machine vibration levels before continuing full production.':'Re-inspect the next 10 components and check the current batch.'):'Continue production; keep routine monitoring.']];
+ const tl=$('tl');tl.innerHTML='';items.forEach((it,i)=>{const li=document.createElement('li');li.style.animationDelay=i*.25+'s';li.innerHTML=`<b>${it[0]}</b>${it[1]}`;tl.appendChild(li)})}
+
+// ---------- Risk ----------
+function gauge(){const {risk,d,fail,sensors:s}=last,[l,c]=lvl(risk);
+ const col={fail:'#ef4444',warn:'#f59e0b',pass:'#22c55e'}[c];const a=$('garc');a.style.stroke=col;a.setAttribute('stroke-dasharray',`${risk*3.14} 314`);
+ $('gnum').textContent=risk;$('glab').textContent=l;
+ const vis=fail?Math.round(last.conf-rnd(0,6)):Math.round(rnd(8,18)),mc=Math.round(Math.min(95,s.vib*10+(s.tmp-60)*.4)),pv=Math.round(rnd(45,75)),hp=fail?Math.round(rnd(60,85)):Math.round(rnd(15,30));
+ bars('bars',[['Visual Defect Risk',vis,'%'],['Machine Condition Risk',mc,'%'],['Process Variation Risk',pv,'%'],['Historical Pattern Risk',hp,'%']])}
+function bars(id,rows,max=100){$(id).innerHTML=rows.map(r=>`<div><span>${r[0]}</span><i><u style="width:0"></u></i><b>${r[1]}${r[2]||''}</b></div>`).join('');
+ requestAnimationFrame(()=>[...$(id).querySelectorAll('u')].forEach((u,i)=>u.style.width=Math.min(100,rows[i][1]/max*100)+'%'))}
+
+// ---------- Actions ----------
+const msg=t=>$('a-msg').textContent=t;
+function alertBox(){const a=$('alert');a.classList.remove('ack');a.textContent=last.risk>=45?'ALERT — Potential quality degradation detected on LINE 03.':'STATUS — Component within expected quality range.'}
+$('a-ack').onclick=()=>{$('alert').classList.add('ack');msg('Alert acknowledged at '+new Date().toLocaleTimeString())};
+$('a-re').onclick=()=>{msg('Re-inspection queued: next 10 components will be scanned.')};
+$('a-inv').onclick=()=>{if(hist[0])hist[0].status='Investigating';renderHist();msg('Latest inspection marked as Investigating.')};
+$('a-rep').onclick=()=>{const r=last?`ForgeGuard AI Quality Report (DEMO DATA)\nTime: ${new Date().toLocaleString()}\nResult: ${last.fail?'FAIL — '+last.d.n:'PASS'}\nConfidence: ${last.conf.toFixed(1)}%\nQuality risk: ${last.risk}/100\nVibration: ${last.sensors.vib.toFixed(1)} mm/s, Temp: ${last.sensors.tmp.toFixed(0)}C\nNote: possible contributing factors only; root cause needs maintenance confirmation.`:'No inspection yet.';
+ const l=document.createElement('a');l.href=URL.createObjectURL(new Blob([r],{type:'text/plain'}));l.download='quality-report.txt';l.click();msg('Report downloaded.')};
+
+// ---------- History ----------
+function seed(){const n=Date.now(),rows=[['Surface Crack','FAIL',94.7,'HIGH',82,'Investigating'],[null,'PASS',98.1,'LOW',21,'Approved'],['Burr','FAIL',91.3,'MEDIUM',64,'Review'],[null,'PASS',97.4,'LOW',18,'Approved'],['Scratch','FAIL',90.2,'LOW',41,'Review'],[null,'PASS',98.8,'LOW',15,'Approved']];
+ rows.forEach((r,i)=>hist.push({t:n-(i+1)*45000-60000,id:'CMP-'+(10421-i),res:r[1],def:r[0],conf:r[2],sev:r[3],risk:r[4],status:r[5]}))}
+function addHistory(){hist.unshift({t:Date.now(),id:'CMP-'+(compN++),res:last.fail?'FAIL':'PASS',def:last.d.n,conf:+last.conf.toFixed(1),sev:last.fail?last.d.sev:'LOW',risk:last.risk,status:last.fail?(last.risk>=75?'Investigating':'Review'):'Approved'});
+ const t=hist.filter(h=>h.res==='FAIL'||1);renderHist();kpis()}
+function renderHist(){const f=[$('f-res').value,$('f-def').value,$('f-sev').value,$('f-time').value],now=Date.now();
+ $('tbody').innerHTML=hist.filter(h=>(!f[0]||h.res===f[0])&&(!f[1]||(h.def||'None')===f[1])&&(!f[2]||h.sev===f[2])&&(!f[3]||now-h.t<f[3]*60000)).map(h=>`<tr><td>${new Date(h.t).toLocaleTimeString([], {hour12:false})}</td><td>${h.id}</td><td class="${h.res==='FAIL'?'fail':'pass'}">${h.res}</td><td>${h.def||'None'}</td><td>${h.conf}%</td><td>${h.sev}</td><td>${h.risk}</td><td>${h.status}</td></tr>`).join('')}
+['f-res','f-def','f-sev','f-time'].forEach(i=>$(i).onchange=renderHist);
+
+// ---------- Analytics ----------
+const DIST=[['Cracks',34],['Scratches',58],['Burrs',41],['Dents',22],['Corrosion',12],['Assembly defects',19]];
+function kpis(){const extra=hist.length-6,fails=hist.filter(h=>h.res==='FAIL').length;
+ const tot=1284+Math.max(0,extra),df=((186+Math.max(0,extra?fails-3:0))/tot*100);
+ $('kpis').innerHTML=[['Total Inspections',tot],['Pass Rate',(100-df).toFixed(1)+'%'],['Defect Rate',df.toFixed(1)+'%'],['High-Risk Events',23+hist.filter(h=>h.risk>=75).length-1],['Est. Rework Cases',64]].map(k=>`<div class="card"><small>${k[0].toUpperCase()}</small><b>${k[1]}</b></div>`).join('')}
+
+// ---------- Sensors ----------
+const SENS=[['VIBRATION','vib','mm/s',6,1],['TEMPERATURE','tmp','°C',75,0],['MACHINE SPEED','rpm','RPM',9999,0],['PRESSURE','prs','bar',9999,1],['MOTOR CURRENT','cur','A',9999,1]];
+function sensors(){sv.vib=Math.max(4,Math.min(8.5,sv.vib+rnd(-.25,.25)));sv.tmp=Math.max(65,Math.min(88,sv.tmp+rnd(-.8,.8)));sv.rpm=1850+rnd(-15,15);sv.prs=6.2+rnd(-.1,.1);sv.cur=18.4+rnd(-.3,.3);
+ $('cards').innerHTML=SENS.map(s=>{const v=sv[s[1]],hi=v>s[3],lb=hi?(s[1]==='vib'?'ABOVE NORMAL':'ELEVATED'):'NORMAL';return `<div class="card"><small>${s[0]}</small><b>${v.toFixed(s[4]).replace(/\B(?=(\d{3})+(?!\d))/g,',')} <small>${s[2]}</small></b><span class="${hi?'warn':'pass'}">${hi?'⚠':'●'} ${lb}</span></div>`}).join('');
+ tv.push(sv.vib);tt.push(sv.tmp);if(tv.length>60){tv.shift();tt.shift()}trend()}
+function trend(){const c=$('trend'),x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);x.strokeStyle='#2a323c';x.lineWidth=1;for(let i=1;i<4;i++){x.beginPath();x.moveTo(0,i*c.height/4);x.lineTo(c.width,i*c.height/4);x.stroke()}
+ const line=(d,lo,hi,col)=>{x.strokeStyle=col;x.lineWidth=2;x.beginPath();d.forEach((v,i)=>{const px=i/59*c.width,py=c.height-(v-lo)/(hi-lo)*(c.height-14)-7;i?x.lineTo(px,py):x.moveTo(px,py)});x.stroke()};
+ line(tv,3,9,'#22d3ee');line(tt,60,90,'#f59e0b')}
+
+// ---------- Static sections ----------
+$('arch').innerHTML=[['CAMERA','Industrial camera'],['COMPUTER VISION','YOLO / OpenCV / AI model'],['DEFECT DETECTION',''],['DEFECT CLASSIFICATION',''],['SENSOR + MACHINE DATA','Temp / vibration / speed / pressure'],['AI DETECTIVE ANALYSIS',''],['PATTERN & CORRELATION',''],['QUALITY RISK ENGINE',''],['OPERATOR ALERT',''],['INVESTIGATION / CORRECTIVE ACTION','']].map((a,i)=>`<div><b>${String(i+1).padStart(2,'0')} ↓</b><br>${a[0]}<small>${a[1]}</small></div>`).join('');
+$('road').innerHTML=['AI Visual Inspection','Real-Time Camera Integration','Sensor / PLC Integration','Multi-Sensor Anomaly Detection','Predictive Quality Intelligence','Smart Factory / Industry 4.0 Deployment'].map((r,i)=>`<div><b>PHASE ${i+1}</b>${r}</div>`).join('');
+$('f-def').innerHTML+=['None',...DEFECTS.filter(d=>d.n).map(d=>d.n)].map(n=>`<option>${n}</option>`).join('');
+
+$('b-start').onclick=startCam;$('b-allow').onclick=startCam;$('b-stop').onclick=stopCam;$('b-cap').onclick=capture;$('b-run').onclick=runInspection;
+seed();renderHist();kpis();bars('dist',DIST,60);for(let i=0;i<60;i++)sensors();setInterval(sensors,1000);
+
+$('b-up').onclick=()=>$('up').click();
+$('b-photo').onclick=()=>$('photo').click();
+$('up').onchange=$('photo').onchange=e=>{const f=e.target.files[0];if(!f)return;const im=new Image();im.onload=()=>{const c=$('cap');c.width=im.naturalWidth;c.height=im.naturalHeight;c.getContext('2d').drawImage(im,0,0);c.hidden=false;$('vid').hidden=true;$('idle').hidden=true;captured=true;$('b-run').disabled=false;frame++;$('m-frame').textContent=frame;$('m-status').textContent='IMAGE LOADED'};im.src=URL.createObjectURL(f)};
+
+$('b-gold').onclick=()=>{if(stream&&!captured)capture();if(!captured){$('m-ref').textContent='CAPTURE/UPLOAD A GOOD PRODUCT FIRST';return}golden=prep($('cap'));$('m-ref').textContent='SET ✓'};
+</script></body></html>
